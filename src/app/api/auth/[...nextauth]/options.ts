@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
           if (!user) {
             throw new Error("No user found with the provided credentials.");
           }
-          if (user.isVerified) {
+          if (!user.isVerified) {
             throw new Error(
               "User is not verified. Please check your email for verification link."
             );
@@ -50,6 +50,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user._id?.toString();
+        token.isVerified = user.isVerified;
         token.isAcceptingMessages = user.isAcceptingMessages;
         token.username = user.username;
       }
