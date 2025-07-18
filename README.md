@@ -39,13 +39,13 @@ nglFeedback is a smart feedback/social messaging platform built with Next.js, Re
 ### Home Page
 ![homePage](/public/homePageNgl.png)
 ### SignUp Page
-![signUpNgl](/nextfeedback/public/signUpNgl.png)
+![signUpNgl](/public/signUpNgl.png)
 ### SignIn Page
-![signInNgl](/nextfeedback/public/signInNgl.png)
+![signInNgl](/public/signInNgl.png)
 ### Dashboard Page
-![dashboardNgl](/nextfeedback/public/dashboardNgl.png)
+![dashboardNgl](/public/dashboardNgl.png)
 ### Public URL Page
-![publicUrlPgNgl](/nextfeedback/public/publicUrlPgNgl.png)
+![publicUrlPgNgl](/public/publicUrlPgNgl.png)
 
 
 
