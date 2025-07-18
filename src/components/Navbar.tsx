@@ -1,6 +1,4 @@
 "use client"
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession,signOut } from "next-auth/react";
 import React from 'react'

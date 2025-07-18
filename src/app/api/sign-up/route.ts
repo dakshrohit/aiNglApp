@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 import bcrypt from "bcryptjs";
 import UserModel from "@/model/User.model";
-import { signUpSchema } from "@/schemas/signUpSchema";
 
 export async function POST(request:Request){
     await dbConnect();
@@ -89,7 +88,7 @@ export async function POST(request:Request){
         return NextResponse.json({
             success: true,
             message: "User registered successfully. Please check your email for the verification code.",
-            // isAcceptingMessages: true
+            // isAcceptingMessage: true
         }, { status: 201 });
     }
     catch (error) {

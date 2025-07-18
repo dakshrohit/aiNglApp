@@ -31,6 +31,7 @@ function UserDashboard() {
   const form = useForm({
     resolver: zodResolver(acceptMessageSchema),
   });
+  //i have to read react-hook-form documentation to understand this better
 
   const { register, watch, setValue } = form;
   const acceptMessages = watch('acceptMessages');
@@ -39,14 +40,14 @@ function UserDashboard() {
     setIsSwitchLoading(true);
     try {
       const response = await axios.get<ApiResponse>('/api/accept-messages');
-      setValue('acceptMessages', response.data.isAcceptingMessages ?? false);
+      setValue('acceptMessages', response.data.isAcceptingMessage ?? false);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast(axiosError.response?.data.message ?? 'Failed to fetch message settings');
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue, toast]);
+  }, [setValue, ]);
 
   const fetchMessages = useCallback(
     async (refresh: boolean = false) => {
@@ -66,7 +67,7 @@ function UserDashboard() {
         setIsSwitchLoading(false);
       }
     },
-    [setIsLoading, setMessages, toast]
+    [setIsLoading, setMessages, ]
   );
 
   // Fetch initial state from the server
@@ -76,7 +77,7 @@ function UserDashboard() {
     fetchMessages();
 
     fetchAcceptMessages();
-  }, [session, setValue, toast, fetchAcceptMessages, fetchMessages]);
+  }, [session, setValue, , fetchAcceptMessages, fetchMessages]);
 
   // Handle switch change
   const handleSwitchChange = async () => {
@@ -93,11 +94,11 @@ function UserDashboard() {
   };
 
   if (!session || !session.user) {
-    return <div></div>;
+    return <div>Please login</div>;
   }
 
   const { username } = session.user as User;
-
+ //i have to study more about finidng the base URL dynamically
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
   const profileUrl = `${baseUrl}/u/${username}`;
 
@@ -152,7 +153,7 @@ function UserDashboard() {
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         {messages.length > 0 ? (
-          messages.map((message, index) => (
+          messages.map((message) => (
             <MessageCard
               key={String(message._id)}
               message={message}

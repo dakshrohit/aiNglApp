@@ -52,7 +52,7 @@ export async function POST(request: Request) {
   }
 }
 // This function handles the GET request to check if the user is accepting messages
-export async function GET(request:Request){
+export async function GET(){ //removed the unused parameter _request
     
     await dbConnect();
   const session = await getServerSession(authOptions);

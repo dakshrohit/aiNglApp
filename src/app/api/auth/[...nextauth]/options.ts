@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User.model";
 
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -13,7 +14,10 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: any): Promise<any> {
+      async authorize(credentials: Record<string,string> | undefined): Promise<any> { // eslint-disable-line @typescript-eslint/no-explicit-any
+        if(!credentials){
+          throw new Error("No credentials provided.");
+        }
         await dbConnect();
         try {
           const user = await UserModel.findOne({
@@ -39,8 +43,11 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Invalid password. Please try again.");
           }
           return user;
-        } catch (error: any) {
-          throw new Error(error);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            throw new Error(error.message);
+          }
+          throw new Error("Unknown error during authorization.");
         }
       },
     }),
@@ -51,17 +58,17 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user._id?.toString();
         token.isVerified = user.isVerified;
-        token.isAcceptingMessages = user.isAcceptingMessages;
+        token.isAcceptingMessage = user.isAcceptingMessage;
         token.username = user.username;
       }
       return token;
     },
 
-    async session({ session, user, token }) {
+    async session({ session, token }) {
       if (token) {
         session.user._id = token.id;
         session.user.isVerified = token.isVerified;
-        session.user.isAcceptingMessages = token.isAcceptingMessages;
+        session.user.isAcceptingMessage = token.isAcceptingMessage;
         session.user.username = token.username;
       }
       // You can also add other properties to the session object here

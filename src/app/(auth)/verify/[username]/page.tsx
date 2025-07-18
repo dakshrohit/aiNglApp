@@ -14,7 +14,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/
 
 const VerifyAccount = () => {
     const router = useRouter();
-    const params = useParams() as { username: string };
+    const params = useParams() as { username: string }; 
     
     // console.log('Verify page - params:', params);
     // console.log('Verify page - username:', params.username);

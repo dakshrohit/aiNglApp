@@ -6,8 +6,8 @@ import { NextResponse } from "next/server";
 import UserModel from "@/model/User.model";
 import { User } from "next-auth";
 import mongoose from "mongoose";
-
-export async function GET(request: Request) {
+// This route is used to get the messages of the user 
+export async function GET() {  //removed the unused parameter _request
   await dbConnect();
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   try {
     const user = await UserModel.aggregate([ //using aggregation to get the messages of the user
         {
-            $match:{userId}
+            $match:{_id:userId}
         },
         {
             $unwind:'$messages'
@@ -63,5 +63,11 @@ export async function GET(request: Request) {
       { success: true, messages: user[0].messages },
       { status: 200 }
     );
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error during database connection:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }

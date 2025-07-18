@@ -158,10 +158,13 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-export async function POST(req: Request) {
+export async function POST() { //removed the unused parameter req
   try {
     // const { prompt } = await req.json(); // Extract the prompt from the request body given by the user
-    const prompt="Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be suitable for a diverse audience. Avoid personal or sensitive topics, focusing instead on universal themes that encourage friendly interaction. For example, your output should be structured like this: 'What’s a hobby you’ve recently started?||If you could have dinner with any historical figure, who would it be?||What’s a simple thing that makes you happy?'. Ensure the questions are intriguing, foster curiosity, and contribute to a positive and welcoming conversational environment.";
+const prompt = `
+Generate exactly three open-ended, engaging questions for strangers on an anonymous social messaging platform. Return ONLY the questions, as a single string, separated by '||', with NO extra text or explanation.
+For example: What inspires you?||If you could travel anywhere, where would you go?||What's your favorite way to relax?
+`
 
 
     const openrouterApiKey = process.env.OPENROUTER_API_KEY;
@@ -174,7 +177,7 @@ export async function POST(req: Request) {
       model: 'mistralai/mistral-small-3.2-24b-instruct:free', // Use your desired model id here
       messages: [{ role: 'user', content: prompt }],
       stream: true,
-      max_tokens: 400, // Adjust as needed
+      max_tokens: 400, // will be adjusted based the needs
        
     };
 
@@ -182,7 +185,6 @@ export async function POST(req: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: 'Bearer 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',
         Authorization: `Bearer ${openrouterApiKey}`, // Use the environment variable`,
 
         //'HTTP-Referer': 'https://www.sitename.com', // optional, omit if you have no domain
@@ -195,15 +197,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No response from OpenRouter' }, { status: 500 });
     }
 
-    // Stream /*  */the response back to the client as-is (SSE chunks)
+    // Streaming the response back to the client as-is (SSE chunks)
     return new Response(response.body, {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
       },
-    });
+    }); 
 
+ 
   } catch (error) {
     console.error('OpenRouter API error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

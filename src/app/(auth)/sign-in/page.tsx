@@ -84,7 +84,7 @@ import { Button } from "@/components/ui/button";
 import { signInschema } from "@/schemas/signInSchema";
 import { signIn } from "next-auth/react";
 
-const page = () => {
+const Page = () => {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -141,7 +141,7 @@ const page = () => {
               name="identifier"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email/Username</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="write your email/username..."
@@ -194,4 +194,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

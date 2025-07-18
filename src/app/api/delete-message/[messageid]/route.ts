@@ -8,8 +8,11 @@ import { User } from "next-auth";
 import mongoose from "mongoose";
 import { error } from "console";
 
-export async function DELETE(request: Request,{params}:{params:{messageid:string}}) {
-  const messageId = params.messageid;
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ messageid: string }> }
+) {
+  const { messageid } = await params;
   await dbConnect();
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
@@ -22,7 +25,7 @@ export async function DELETE(request: Request,{params}:{params:{messageid:string
   try {
    const updateResult= await UserModel.updateOne(
       { _id: user._id },
-      { $pull: { messages: { _id: new mongoose.Types.ObjectId(messageId) } } }
+      { $pull: { messages: { _id: new mongoose.Types.ObjectId(messageid) } } }
     )
     if(updateResult.modifiedCount === 0) {
       console.error("Message not found or already deleted",error);
@@ -37,6 +40,11 @@ export async function DELETE(request: Request,{params}:{params:{messageid:string
     );
     
   } catch (error) {
+    console.error("Error deleting message:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal server error" },
+      { status: 500 }
+    );
     
   }
   
