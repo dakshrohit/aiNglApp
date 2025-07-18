@@ -79,8 +79,8 @@ export default function UserProfilePage() {
                   aiBuffer = aiBuffer.slice(split + 2);
                   setSuggestions(cleanSuggestions([...suggestionsArr]));
                 }
-              } catch (err) {
-                // Ignore non-JSON or partial lines
+              } catch  { 
+                // to gnore non-JSON or partial lines
                 continue;
               }
             }
